@@ -24,8 +24,6 @@ public class TestRequestLimiter implements RequestLimiter {
 
     @Override
     public boolean tryAcquire(Request request, int activeTaskCount) {
-
-        System.out.println("the request data is" + request.getData() + "****" + "activeTaskCount is " + activeTaskCount);
         return true;
     }
 

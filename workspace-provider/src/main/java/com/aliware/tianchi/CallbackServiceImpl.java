@@ -11,35 +11,45 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author daofeng.xjf
- *
+ * <p>
  * 服务端回调服务
  * 可选接口
  * 用户可以基于此服务，实现服务端向客户端动态推送的功能
- *
  */
 public class CallbackServiceImpl implements CallbackService {
 
     public CallbackServiceImpl() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!listeners.isEmpty()) {
-                    for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
-                        try {
-                            int coreNum = Runtime.getRuntime().availableProcessors();
-                            String ip = InetAddress.getLocalHost().getHostAddress();
-                            entry.getValue().receiveServerMsg(coreNum + ";" + ip );
-                            System.out.println(coreNum + "****" + ip);
-                        } catch (Throwable t1) {
-                            listeners.remove(entry.getKey());
-                        }
-                    }
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (!listeners.isEmpty()) {
+//                    for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
+//                        try {
+//                            int coreNum = Runtime.getRuntime().availableProcessors();
+//                            String ip = InetAddress.getLocalHost().getHostAddress();
+//                            entry.getValue().receiveServerMsg(coreNum + ";" + ip );
+//                        } catch (Throwable t1) {
+//                            listeners.remove(entry.getKey());
+//                        }
+//                    }
+//                }
+//            }
+//        }, 5000, 5000);
+        // only push the notice once
+        if (!listeners.isEmpty()) {
+            for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
+                try {
+                    int coreNum = Runtime.getRuntime().availableProcessors();
+                    String ip = InetAddress.getLocalHost().getHostAddress();
+                    entry.getValue().receiveServerMsg(coreNum + ";" + ip);
+                } catch (Throwable t1) {
+                    listeners.remove(entry.getKey());
                 }
             }
-        }, 5000, 5000);
+        }
     }
 
-    private Timer timer = new Timer();
+    //private Timer timer = new Timer();
 
     /**
      * key: listener type
