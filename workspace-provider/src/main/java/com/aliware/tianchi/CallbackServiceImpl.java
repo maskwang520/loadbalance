@@ -3,7 +3,7 @@ package com.aliware.tianchi;
 import org.apache.dubbo.rpc.listener.CallbackListener;
 import org.apache.dubbo.rpc.service.CallbackService;
 
-import java.util.Date;
+import java.net.InetAddress;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +26,10 @@ public class CallbackServiceImpl implements CallbackService {
                 if (!listeners.isEmpty()) {
                     for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
                         try {
-                            entry.getValue().receiveServerMsg(new Date().toString());
+                            int coreNum = Runtime.getRuntime().availableProcessors();
+                            String ip = InetAddress.getLocalHost().getHostAddress();
+                            entry.getValue().receiveServerMsg(coreNum + ";" + ip );
+                            System.out.println(coreNum + "****" + ip);
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
                         }
@@ -47,6 +50,7 @@ public class CallbackServiceImpl implements CallbackService {
     @Override
     public void addListener(String key, CallbackListener listener) {
         listeners.put(key, listener);
-        listener.receiveServerMsg(new Date().toString()); // send notification for change
+        //初始时候没有通知
+        //listener.receiveServerMsg(new Date().toString()); // send notification for change
     }
 }

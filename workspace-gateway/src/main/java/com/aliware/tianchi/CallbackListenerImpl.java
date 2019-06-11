@@ -1,6 +1,9 @@
 package com.aliware.tianchi;
 
+import com.aliware.tianchi.HostInfo.HostMap;
 import org.apache.dubbo.rpc.listener.CallbackListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author daofeng.xjf
@@ -12,9 +15,14 @@ import org.apache.dubbo.rpc.listener.CallbackListener;
  */
 public class CallbackListenerImpl implements CallbackListener {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CallbackListenerImpl.class);
+
     @Override
     public void receiveServerMsg(String msg) {
-        System.out.println("receive msg from server :" + msg);
+        HostMap hostMap = new HostMap();
+        String[] hostInfo = msg.split(";");
+        hostMap.saveHostInfo(hostInfo[0], Integer.valueOf(hostInfo[1]));
+        LOGGER.info("hostMap's size is {}", hostMap.getSize());
     }
 
 }
