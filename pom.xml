@@ -11,7 +11,7 @@
 
 
     <properties>
-        <dubbo.version>tianchi.1.0.0</dubbo.version>
+        <dubbo.version>2.7.21</dubbo.version>
     </properties>
 
 
